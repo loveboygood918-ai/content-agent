@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Agent — Bhavin AI Stories</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAFAF8;
+    --panel: #FFFFFF;
+    --line: #E4E2DD;
+    --ink: #1C1B1F;
+    --ink-soft: #66635C;
+    --coral: #FF4D6D;
+    --coral-soft: #FFE6EA;
+    --indigo: #2D2A5C;
+    --indigo-soft: #EDECF6;
+    --green: #1E8E5A;
+    --green-soft: #E4F5EC;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    padding-bottom: 48px;
+  }
+
+  .masthead {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid var(--line);
+    background: var(--panel);
+  }
+
+  .masthead .eyebrow {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+
+  .masthead h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 26px;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+
+  .masthead .handle {
+    color: var(--coral);
+  }
+
+  .masthead .meta {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .masthead .meta span.dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  section {
+    padding: 24px 20px;
+  }
+
+  section h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  section .section-sub {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .agent-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--indigo);
+    border-radius: 4px;
+    padding: 16px;
+  }
+
+  .agent-card.is-live {
+    border-left-color: var(--coral);
+  }
+
+  .agent-card .row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .agent-card .name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .agent-card .role {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+
+  .pill {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .pill.live {
+    background: var(--coral-soft);
+    color: var(--coral);
+  }
+
+  .pill.scaffolded {
+    background: var(--indigo-soft);
+    color: var(--indigo);
+  }
+
+  .agent-card .detail {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  .agent-card .detail strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .stat-box {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 14px;
+  }
+
+  .stat-box .num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+  }
+
+  .stat-box .label {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .post-row {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 12px 14px;
+  }
+
+  .post-row .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .post-row .views {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--coral);
+    white-space: nowrap;
+  }
+
+  .post-row .caption {
+    font-size: 13px;
+    color: var(--ink);
+    margin-top: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .post-row .tags {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  .hashtag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .hashtag-cloud .tag {
+    background: var(--indigo-soft);
+    color: var(--indigo);
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 20px;
+  }
+
+  .empty-note {
+    font-size: 13px;
+    color: var(--ink-soft);
+    background: var(--panel);
+    border: 1px dashed var(--line);
+    border-radius: 4px;
+    padding: 14px;
+  }
+
+  #loading {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+
+  footer {
+    padding: 20px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="masthead">
+    <div class="eyebrow">Content Agent</div>
+    <h1>Bhavin AI Stories <span class="handle">@bhavinaistories</span></h1>
+    <div class="meta">
+      <span><span class="dot"></span>5 agents scaffolded</span>
+      <span id="last-updated">Loading data…</span>
+    </div>
+  </div>
+
+  <div id="loading">Reading dashboard/data.json…</div>
+
+  <div id="app" style="display:none;">
+
+    <section>
+      <h2>Agent pipeline</h2>
+      <div class="section-sub">Ideas → hooks → schedule → performance → DMs</div>
+      <div class="pipeline">
+
+        <div class="agent-card">
+          <div class="row">
+            <div>
+              <div class="name">Ideator</div>
+              <div class="role">Scouts content ideas from your posts and competitors</div>
+            </div>
+            <span class="pill scaffolded">Scaffolded</span>
+          </div>
+          <div class="detail">Wired up to real data next — will surface angles your competitors are hitting that you haven't tried.</div>
+        </div>
+
+        <div class="agent-card">
+          <div class="row">
+            <div>
+              <div class="name">Hook &amp; Script</div>
+              <div class="role">Writes hooks and scripts for chosen ideas</div>
+            </div>
+            <span class="pill scaffolded">Scaffolded</span>
+          </div>
+          <div class="detail">Will draft hook variants once the Ideator is feeding it real prompts.</div>
+        </div>
+
+        <div class="agent-card">
+          <div class="row">
+            <div>
+              <div class="name">Planner</div>
+              <div class="role">Builds your daily content calendar</div>
+            </div>
+            <span class="pill scaffolded">Scaffolded</span>
+          </div>
+          <div class="detail">Will slot scripts into a posting schedule based on when your posts perform best.</div>
+        </div>
+
+        <div class="agent-card is-live">
+          <div class="row">
+            <div>
+              <div class="name">Analyst</div>
+              <div class="role">Reads your stats and your competitors'</div>
+            </div>
+            <span class="pill live">Live</span>
+          </div>
+          <div class="detail" id="analyst-detail">Reading data…</div>
+        </div>
+
+        <div class="agent-card">
+          <div class="row">
+            <div>
+              <div class="name">DM Manager</div>
+              <div class="role">Triages incoming DMs</div>
+            </div>
+            <span class="pill scaffolded">Scaffolded</span>
+          </div>
+          <div class="detail">Needs the Telegram + Instagram connection from Step 4 before it can triage anything.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <section>
+      <h2>What the Analyst found</h2>
+      <div class="section-sub">Pulled live from <code>dashboard/data.json</code></div>
+      <div class="stat-grid" id="stat-grid"></div>
+    </section>
+
+    <section>
+      <h2>Top performing posts</h2>
+      <div class="section-sub">Yours and your competitors', ranked by views</div>
+      <div class="post-list" id="top-posts"></div>
+    </section>
+
+    <section>
+      <h2>Hashtags showing up most</h2>
+      <div class="section-sub">Across every account tracked</div>
+      <div class="hashtag-cloud" id="hashtag-cloud"></div>
+    </section>
+
+    <section id="errors-section" style="display:none;">
+      <h2>Couldn't be scraped</h2>
+      <div class="section-sub">These need a second look — wrong handle, private account, or no posts</div>
+      <div class="post-list" id="error-list"></div>
+    </section>
+
+  </div>
+
+  <footer>Content Agent Dashboard · Step 3 of 6 · data refreshes when you re-run the Apify actor and re-upload data.json</footer>
+
+<script>
+async function loadDashboard() {
+  let data;
+  try {
+    const res = await fetch('data.json');
+    if (!res.ok) throw new Error('fetch failed');
+    data = await res.json();
+  } catch (e) {
+    document.getElementById('loading').innerHTML =
+      "Couldn't load data.json. Make sure this page and data.json are both in the dashboard/ folder, and that you're viewing this via the GitHub Pages link (not opening the file directly).";
+    return;
+  }
+
+  const valid = data.filter(item => !item.error);
+  const errored = data.filter(item => item.error);
+
+  const withViews = valid.map(item => ({
+    ...item,
+    views: item.videoViewCount ?? item.videoPlayCount ?? item.likesCount ?? 0
+  }));
+
+  const totalPosts = valid.length;
+  const totalViews = withViews.reduce((sum, p) => sum + (p.views || 0), 0);
+  const totalComments = valid.reduce((sum, p) => sum + (p.commentsCount || 0), 0);
+  const avgViews = totalPosts ? Math.round(totalViews / totalPosts) : 0;
+
+  document.getElementById('last-updated').textContent =
+    totalPosts + ' posts tracked across your account and competitors';
+
+  document.getElementById('analyst-detail').innerHTML =
+    'Found <strong>' + totalPosts + ' posts</strong> across every tracked account, totalling <strong>' +
+    formatNum(totalViews) + ' views</strong>. Average post lands ' + formatNum(avgViews) + ' views.';
+
+  const statGrid = document.getElementById('stat-grid');
+  statGrid.innerHTML = [
+    ['Posts tracked', totalPosts],
+    ['Total views', formatNum(totalViews)],
+    ['Avg views / post', formatNum(avgViews)],
+    ['Total comments', formatNum(totalComments)]
+  ].map(([label, num]) =>
+    '<div class="stat-box"><div class="num">' + num + '</div><div class="label">' + label + '</div></div>'
+  ).join('');
+
+  const top = withViews
+    .filter(p => p.views > 0)
+    .sort((a, b) => b.views - a.views)
+    .slice(0, 6);
+
+  const topPostsEl = document.getElementById('top-posts');
+  if (top.length === 0) {
+    topPostsEl.innerHTML = '<div class="empty-note">No view counts came through in this pull — re-run the Apify actor to try again.</div>';
+  } else {
+    topPostsEl.innerHTML = top.map(p => {
+      const caption = (p.caption || '').replace(/"/g, '&quot;').slice(0, 140);
+      const tags = (p.hashtags || []).slice(0, 4).map(t => '#' + t).join(' ');
+      return '<div class="post-row">' +
+        '<div class="top"><span class="views">' + formatNum(p.views) + ' views</span></div>' +
+        '<div class="caption">' + (caption || 'No caption') + '</div>' +
+        (tags ? '<div class="tags">' + tags + '</div>' : '') +
+        '</div>';
+    }).join('');
+  }
+
+  const tagCounts = {};
+  valid.forEach(p => (p.hashtags || []).forEach(t => {
+    tagCounts[t] = (tagCounts[t] || 0) + 1;
+  }));
+  const topTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]).slice(0, 14);
+
+  const cloudEl = document.getElementById('hashtag-cloud');
+  if (topTags.length === 0) {
+    cloudEl.innerHTML = '<div class="empty-note">No hashtags found in this pull.</div>';
+  } else {
+    cloudEl.innerHTML = topTags.map(([tag, count]) =>
+      '<span class="tag">#' + tag + ' · ' + count + '</span>'
+    ).join('');
+  }
+
+  if (errored.length > 0) {
+    document.getElementById('errors-section').style.display = 'block';
+    document.getElementById('error-list').innerHTML = errored.map(e =>
+      '<div class="post-row"><div class="caption"><strong>' + (e.username || e.url) + '</strong> — ' +
+      (e.errorDescription || e.error) + '</div></div>'
+    ).join('');
+  }
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
+
+function formatNum(n) {
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+  return String(n);
+}
+
+loadDashboard();
+</script>
+
+</body>
+</html>
